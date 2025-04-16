@@ -1,61 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hexagon Tile Game</title>
+    <title>Board Game</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-        #board {
-            display: grid;
-            grid-template-columns: repeat(10, 60px);
-            grid-template-rows: repeat(10, 52px);
-            gap: 2px;
-        }
-        .hex {
-            width: 60px;
-            height: 52px;
-            background-color: lightgray;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            transition: background-color 0.2s;
-        }
+        body { font-family: sans-serif; }
+        .player { margin-bottom: 6px; }
     </style>
 </head>
 <body>
+    <h1>Board Game</h1>
 
-<div id="board">
-    <!-- Hexagonal tiles will be added here on clicks -->
-</div>
+    <h2>Current Player: {{ game.current_player().name }}</h2>
+    <p>{{ game.message }}</p>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Create an empty board of hex tiles
-        for (let i = 0; i < 100; i++) {
-            const hexTile = $('<div class="hex"></div>');
-            hexTile.data("clicked", false);  // Track if a tile has been clicked
-            $('#board').append(hexTile);
-        }
+    <h3>Players</h3>
+    <ul>
+    {% for p in game.players %}
+        <li class="player">
+            {{ p.name }} | Pos: {{ p.position }} | Coins: {{ p.coins }}
+            {% if p.on_mountain %}(On Mountain){% endif %}
+            {% if p.eliminated %}(Eliminated){% endif %}
+        </li>
+    {% endfor %}
+    </ul>
 
-        // Add color to hex tiles on click
-        $('#board').on('click', '.hex', function() {
-            if (!$(this).data("clicked")) {  // Only allow one click per tile
-                $.getJSON('/add_tile', function(data) {
-                    $(this).css('background-color', data.color);
-                    $(this).data("clicked", true);  // Mark as clicked
-                }.bind(this));
-            }
-        });
-    });
-</script>
-
+    <a href="{{ url_for('roll') }}">Roll Dice</a>
+    <br><br>
+    <a href="{{ url_for('reset') }}">Reset Game</a>
 </body>
 </html>

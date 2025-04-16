@@ -1,0 +1,7 @@
+boardgame/
+├── static/
+│   └── style.css
+├── templates/
+│   └── board.html
+├── app.py
+└── game_state.py
